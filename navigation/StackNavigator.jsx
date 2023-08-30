@@ -39,7 +39,7 @@ export const BottomTabs = () => {
                 }} />
             <Tab.Screen name='Profile' component={ProfileScreen}
                 options={{
-                    tabBarLabel: 'Home',
+                    tabBarLabel: 'Profile',
                     headerShown: false,
                     tabBarLabelStyle: { color: 'white' },
                     tabBarIcon: ({ focused }) => (
