@@ -37,34 +37,37 @@ export const LoginScreen = () => {
     )
 
     useEffect(() => {
-        const check = async () => {
+        const checkIsAuthenticated = async () => {
             const accessToken = await AsyncStorage.getItem("token");
             const expirationDate = await AsyncStorage.getItem("expirationDate");
 
             if (accessToken && expirationDate) {
-                const currentTime = Date.now();
-                if (currentTime < parseInt(expirationDate)) {
-                    navigation.replace("Main");
-                } else {
-                    AsyncStorage.removeItem("token");
-                    AsyncStorage.removeItem("expirationDate");
-                }
+                const currentTime = Date.now()
+                moveToMainScreenIfNotExpired(currentTime, expirationDate, navigation)
+
+                AsyncStorage.removeItem("token")
+                AsyncStorage.removeItem("expirationDate")
             }
         }
 
-        check()
+        checkIsAuthenticated()
     }, [])
 
     useEffect(() => {
         if (response?.type === 'success') {
             const { access_token, expires_in } = response.params
-            console.log(response)
-            console.log(new Date(expires_in).getTime().toString())
             AsyncStorage.setItem('token', access_token)
             AsyncStorage.setItem('expirationDate', new Date(expires_in).getTime().toString())
             navigation.navigate('Main')
         }
     }, [response])
+
+    function moveToMainScreenIfNotExpired(currentTime, expirationDate, navigation) {
+        if (currentTime < parseInt(expirationDate)) {
+            navigation.replace("Main")
+            return
+        }
+    }
 
     return (
         <LinearGradient colors={['#040306', '#131624']} style={{ flex: 1 }}>
