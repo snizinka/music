@@ -44,9 +44,11 @@ export const LoginScreen = () => {
             if (accessToken && expirationDate) {
                 const currentTime = Date.now()
                 moveToMainScreenIfNotExpired(currentTime, expirationDate, navigation)
-
-                AsyncStorage.removeItem("token")
-                AsyncStorage.removeItem("expirationDate")
+                
+                if (currentTime >= parseInt(expirationDate)) {
+                    AsyncStorage.removeItem("token")
+                    AsyncStorage.removeItem("expirationDate")
+                }
             }
         }
 
